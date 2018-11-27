@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--引入外部properties文件-->
+    <properties resource="jdbc.properties"  />
+
+    <typeAliases>
+        <!--会自动扫描下面的子包及子包内的类，且大小写不敏感-->
+        <package name="com.kaorou.mybatis.entity"></package>
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"></transactionManager>
+            <!--使用数据库连接池-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--映射配置文件的路径-->
+    <mappers>
+        <!--<mapper resource="com/kaorou/mybatis/mapper/UserMapper.xml" />-->
+        <!--注册指定包下的所有mapper接口，且要求mapper接口名称和mapper映射文件名称相同，且放在同一个目录中-->
+        <package name="com.kaorou.mybatis.mapper"/>
+    </mappers>
+
+</configuration>
