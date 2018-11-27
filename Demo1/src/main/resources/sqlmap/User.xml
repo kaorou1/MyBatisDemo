@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace 命名空间
+    通常情况就是实体类的全名称
+-->
+<mapper namespace="com.kaorou.entity.User">
+
+    <!--基本数据类型不用写全名，默认有-->
+    <select id="findUserById" parameterType="Integer" resultType="com.kaorou.entity.User">
+        select * from user where id = #{value}
+    </select>
+
+    <!--#{}表示的是一个占位符，有效防止sql注入，传过去的值是加引号的
+        如果parameterType传输单个简单类型值，#{}括号中可以是value或其它名称-->
+    <select id="findUserLike" parameterType="String" resultType="com.kaorou.entity.User">
+        select * from user where username like #{username}
+
+    </select>
+
+    <!--${}表示的是一个字符串拼接，传过去的值是不加引号的，
+        ${}可以接收简单类型值或pojo属性值，
+        如果parameterType传输单个简单类型值，${}括号中只能是value-->
+    <select id="findUserLike2" parameterType="String" resultType="com.kaorou.entity.User">
+        select * from user where username like '%${value}%'
+    </select>
+
+    <select id="findUserLike3" parameterType="String" resultType="com.kaorou.entity.User">
+        select * from user where username like "%"#{value}"%"
+    </select>
+
+    <select id="findUserLike4" parameterType="String" resultType="com.kaorou.entity.User">
+        select * from user where username like concat('%', concat(#{value}, '%'))
+    </select>
+
+    <!--#{}可以使用OGNL表达式-->
+    <insert id="insertUser" parameterType="com.kaorou.entity.User">
+        insert into user values (null, #{username}, #{birthday}, #{sex}, #{address})
+    </insert>
+
+    <!--需要返回保存的自增长ID并封装到对象中
+        int自增长用AFTER，varchar如UUID用before-->
+    <insert id="insertUser2" parameterType="com.kaorou.entity.User">
+
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into user
+        values (null, #{username}, #{birthday}, #{sex}, #{address})
+    </insert>
+
+    <!--更新用户-->
+    <update id="updateUserById" parameterType="com.kaorou.entity.User">
+        update user
+        set username=#{username}, birthday=#{birthday}, sex=#{sex}, address=#{address}
+        where id=#{id}
+    </update>
+    <!--删除用户-->
+    <delete id="deleteUserById" parameterType="Integer">
+        delete from user
+        where id=#{id}
+    </delete>
+
+
+</mapper>
